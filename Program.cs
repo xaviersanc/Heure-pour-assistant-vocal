@@ -41,26 +41,38 @@ class Program
         if (minute == 30)
             return NomHeure(heure) + " et demie" + PeriodeJour(heure);
 
-        if (minute == 45)
-            return NomHeure(heure) + " moins le quart" + PeriodeJour(heure);
+        // Avant la demi-heure
+        if (minute < 30)
+        {
+            // minute exacte en palier de 5
+            if (minute % 5 == 0)
+                return NomHeure(heure) + " " + NomMinute(minute) + PeriodeJour(heure);
 
-        if (minute == 50)
-            return NomHeure(heure) + " moins dix" + PeriodeJour(heure);
+            // minute précise : arrondir au palier de 5 et indiquer l'approximation
+            int arrondi = RoundToNearestFive(minute);
+            int delta = Math.Abs(minute - arrondi);
+            string approx = delta == 0 ? string.Empty : " à " + Approximation(delta);
+            return NomHeure(heure) + " " + NomMinute(arrondi) + PeriodeJour(heure) + approx;
+        }
 
-        if (minute == 55)
-            return NomHeure(heure) + " moins cinq" + PeriodeJour(heure);
-
-        if (minute < 45)
-            return NomHeure(heure) + " " + NomMinute(minute) + PeriodeJour(heure);
-
-
+        // Après la demi-heure -> on parle en minutes restantes vers l'heure suivante
         int minutesRestantes = 60 - minute;
         int prochainHeure = (heure + 1) % 24;
 
-        if (minutesRestantes == 15)
-            return NomHeure(prochainHeure) + " moins le quart" + PeriodeJour(prochainHeure);
+        // cas spéciaux sur palier de 5
+        if (minutesRestantes % 5 == 0)
+        {
+            if (minutesRestantes == 15)
+                return NomHeure(prochainHeure) + " moins le quart" + PeriodeJour(prochainHeure);
 
-        return NomHeure(prochainHeure) + " moins " + NomMinute(minutesRestantes) + PeriodeJour(prochainHeure);
+            return NomHeure(prochainHeure) + " moins " + NomMinute(minutesRestantes) + PeriodeJour(prochainHeure);
+        }
+
+        // minutes restantes précises -> arrondir et approximer
+        int arrondiRestant = RoundToNearestFive(minutesRestantes);
+        int deltaRestant = Math.Abs(minutesRestantes - arrondiRestant);
+        string approxRest = deltaRestant == 0 ? string.Empty : " à " + Approximation(deltaRestant);
+        return NomHeure(prochainHeure) + " moins " + NomMinute(arrondiRestant) + PeriodeJour(prochainHeure) + approxRest;
     }
 
     static string NomHeure(int heure)
@@ -125,5 +137,17 @@ class Program
         return " de l'après-midi";
 
         return " du soir";
+    }
+
+    static int RoundToNearestFive(int minute)
+    {
+        return (int)(Math.Round(minute / 5.0, MidpointRounding.AwayFromZero) * 5);
+    }
+
+    static string Approximation(int delta)
+    {
+        if (delta <= 1)
+            return "une minute près";
+        return NomMinute(delta) + " minutes près";
     }
 }
