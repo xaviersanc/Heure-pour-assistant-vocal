@@ -17,3 +17,5 @@ Les étapes recommandées sont :
 
 ## Rendu
 Un lien github ou gitlab vers un dépôt consultable par mail à sylvain.labasse@mail-formateur.net avant le 04/05/26.
+
+Groupe : Xavier SANCHEZ

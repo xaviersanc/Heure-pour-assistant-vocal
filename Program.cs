@@ -41,6 +41,15 @@ class Program
         if (minute == 30)
             return NomHeure(heure) + " et demie" + PeriodeJour(heure);
 
+        if (minute == 45)
+            return NomHeure(heure) + " moins le quart" + PeriodeJour(heure);
+
+        if (minute == 50)
+            return NomHeure(heure) + " moins dix" + PeriodeJour(heure);
+
+        if (minute == 55)
+            return NomHeure(heure) + " moins cinq" + PeriodeJour(heure);
+
         if (minute < 45)
             return NomHeure(heure) + " " + NomMinute(minute) + PeriodeJour(heure);
 
@@ -111,7 +120,10 @@ class Program
 
         if (heure < 12)
             return " du matin";
-
+        
+        if (heure < 18)
         return " de l'après-midi";
+
+        return " du soir";
     }
 }
